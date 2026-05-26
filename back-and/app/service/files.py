@@ -117,7 +117,7 @@ def upload(file: UploadFile, path: str, root: bool = False) -> Dict[str, Any]:
     if not dest_dir.exists() or not dest_dir.is_dir(): 
         raise HTTPException(status_code=404, detail="Folder tujuan tidak ditemukan")
 
-    file_path = virtual_to_real(f"{dest_dir}/{file.filename}", root)
+    file_path = virtual_to_real(f"{path}/{file.filename}", root)
 
     if os.path.exists(file_path): 
         raise HTTPException(status_code=409, detail=f"File '{file.filename}' sudah ada")
@@ -132,7 +132,7 @@ def upload(file: UploadFile, path: str, root: bool = False) -> Dict[str, Any]:
     
 def delete(id: str, root: bool = False) -> None:
     path = id_to_path(id)
-    file_path = os.path.join(directory(), path)
+    file_path = virtual_to_real(path, root)
 
     # Cek apakah file ada
     if not os.path.exists(file_path):
